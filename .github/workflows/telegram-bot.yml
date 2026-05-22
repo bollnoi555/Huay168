@@ -1,0 +1,41 @@
+name: Telegram Lotto Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub-hosted jobs have a 6-hour limit, so restart the bot on a schedule.
+    - cron: "7 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-lotto-bot
+  cancel-in-progress: true
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run Telegram bot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_DEFAULT_CHAT_IDS: ${{ secrets.TELEGRAM_DEFAULT_CHAT_IDS }}
+          LAO_API_KEY: ${{ secrets.LAO_API_KEY }}
+          LAO_HISTORY_URL: https://api.apilotto.com/api/v1/laolottohistory
+          LAO_FALLBACK_URL: https://www.raakaadee.com/ตรวจหวย-หุ้น/หวยลาวพัฒนา/
+          THAI_API_BASE: https://lotto.api.rayriffy.com
+          THAI_HISTORY_PAGES: "3"
+          THAI_ARCHIVE_RAW_BASE: https://raw.githubusercontent.com/vicha-w/thai-lotto-archive/master/lottonumbers
+          CHECK_INTERVAL_MINUTES: "15"
+        run: python bot.py

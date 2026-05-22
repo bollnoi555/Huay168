@@ -37,6 +37,20 @@ python bot.py --once
 
 ถ้า API ภายนอกใช้ไม่ได้ ให้คัดลอก `manual_results.example.json` เป็น `data/manual_results.json` แล้วใส่ผลหวยเอง บอตจะใช้ไฟล์นี้ก่อน API เสมอ เหมาะสำหรับทดสอบหรือใช้เป็นแหล่งข้อมูลสำรอง
 
+## รันบน GitHub Actions
+
+GitHub Actions ไม่ใช่เซิร์ฟเวอร์ 24/7 แท้ ๆ เพราะ job มีเวลาจำกัด บอตนี้จึงตั้ง workflow ให้รันเป็นรอบ ๆ และเริ่มใหม่ทุก 6 ชั่วโมง
+
+ตั้งค่า Secrets ที่ GitHub:
+
+1. ไปที่ `Settings > Secrets and variables > Actions > New repository secret`
+2. เพิ่ม `TELEGRAM_BOT_TOKEN` แล้วใส่ token จาก BotFather
+3. ถ้าต้องการแจ้งเตือนแชทตั้งแต่เริ่ม ให้เพิ่ม `TELEGRAM_DEFAULT_CHAT_IDS`
+4. ถ้ามีคีย์หวยลาว ให้เพิ่ม `LAO_API_KEY`
+5. ไปที่ `Actions > Telegram Lotto Bot > Run workflow`
+
+อย่าอัปโหลดไฟล์ `.env` ขึ้น GitHub
+
 ## แหล่งข้อมูลที่ตั้งไว้
 
 - หวยลาวพัฒนา: `https://api.apilotto.com/api/v1/laolottohistory` ใช้ header `x-api-key`
